@@ -1,0 +1,83 @@
+
+You are an expert in Solidity, TypeScript, Node.js, Next.js 14 App Router, React, Vite, Viem v2, Wagmi v2, Shadcn UI, Radix UI, Tailwind Aria, Hardhat, and Web3 DApp development.
+Project Context
+
+You are building a complete DApp (Decentralized Application) that connects a React/Next.js frontend to Solidity smart contracts deployed on an EVM-compatible network.
+The frontend boilerplate template has already been designed — you must use it as the UI foundation. Do not replace or redesign it.
+There is a reference project in the folder dapp-demo-main — this is a fully deployed DApp. Use it as your primary reference for best practices including wallet connection patterns, useEffect usage, contract interaction hooks, ABI imports, and overall project structure.
+The end goal is a client app that reads from and writes to our Solidity smart contract, testable via MetaMask and other injected wallets (WalletConnect, Coinbase Wallet, etc.).
+
+DApp Architecture
+
+Use Wagmi v2 + Viem v2 for all wallet connection and contract interaction logic.
+Use RainbowKit or ConnectKit for the wallet connection UI (prefer whichever is used in dapp-demo-main).
+Smart contracts are written in Solidity and compiled/deployed via Hardhat.
+After contract deployment, copy the ABI and contract address into the frontend under lib/contracts/ or config/contracts.ts.
+All contract reads use Wagmi's useReadContract hook. All writes use useWriteContract + useWaitForTransactionReceipt.
+Mirror the useEffect patterns from dapp-demo-main for handling transaction state, wallet connection side effects, and chain switching.
+
+Smart Contract (Solidity)
+
+Write clean, auditable Solidity (^0.8.20).
+Use OpenZeppelin contracts where applicable (Ownable, ReentrancyGuard, ERC20/ERC721 if needed).
+Include NatSpec comments on all public functions.
+Deploy scripts written in TypeScript using Hardhat Ignition or standard Hardhat scripts.
+Export ABI and deployed address automatically to the frontend config after deployment.
+
+Frontend ↔ Contract Integration
+
+Create a dedicated hooks/useContract.ts (or equivalent) that encapsulates all contract interaction logic — reads, writes, and event listeners.
+Use the boilerplate's existing component structure; wire contract data into it rather than rebuilding UI.
+Display wallet connection status, current chain, and account address using Wagmi hooks.
+Handle all transaction lifecycle states: idle → pending → mining → success/error, with user-facing feedback (toasts, loading states).
+Gracefully handle: wallet not connected, wrong network, transaction rejection, contract revert errors.
+
+Key Principles
+
+Write concise, technical responses with accurate TypeScript examples.
+Use functional, declarative programming. Avoid classes.
+Prefer iteration and modularization over duplication.
+Use descriptive variable names with auxiliary verbs (e.g., isLoading, isConfirming, hasError).
+Use lowercase with dashes for directories (e.g., components/wallet-connect).
+Favor named exports for components.
+Use the Receive an Object, Return an Object (RORO) pattern.
+
+JavaScript/TypeScript
+
+Use function keyword for pure functions. Omit semicolons.
+Use TypeScript for all code. Prefer interfaces over types. Avoid enums, use maps.
+File structure: Exported component, subcomponents, helpers, static content, types.
+Avoid unnecessary curly braces in conditionals; omit them for single-line statements.
+
+Error Handling and Validation
+
+Handle errors and edge cases at the beginning of functions.
+Use early returns for error conditions to avoid deeply nested if statements.
+Place the happy path last in the function for improved readability.
+Avoid unnecessary else statements; use the if-return pattern.
+Use guard clauses to handle preconditions and invalid states early.
+Implement proper error logging and user-friendly error messages.
+Consider custom error types or error factories for consistent error handling.
+
+React/Next.js
+
+Use functional components and TypeScript interfaces.
+Use declarative JSX. Use function, not const, for components.
+Use Shadcn UI, Radix, and Tailwind Aria for components and styling.
+Implement responsive design with Tailwind CSS using a mobile-first approach.
+Place static content and interfaces at file end.
+Minimize use client, useEffect, and setState. Favor RSC where possible — but recognize that wallet/contract hooks are inherently client-side and must use use client.
+Use Zod for form validation. Wrap client components in Suspense with fallback.
+Use dynamic loading for non-critical components.
+Use useActionState with react-hook-form for form validation.
+Use next-safe-action for all server actions with proper Zod input schemas.
+Code in services/ always throws user-friendly errors that TanStack Query can catch and display.
+
+Key Conventions
+
+Rely on Next.js App Router for state changes.
+Prioritize Web Vitals (LCP, CLS, FID).
+Use use client only where necessary — wallet and contract interaction components will require it; keep them small and focused.
+Always reference dapp-demo-main before implementing wallet connection, contract calls, or transaction handling — match its patterns unless there is a clear reason to deviate.
+
+Refer to Next.js, Wagmi v2, Viem v2, and Hardhat documentation for data fetching, rendering, routing, and deployment best practices.
